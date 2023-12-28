@@ -2,16 +2,27 @@
 /* eslint-disable react/prop-types */
 import { Button } from "@chakra-ui/react";
 import { RefreshCw } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import { cn } from "../../cna";
 
 function Quotes({ q, fetchData, url, loading }) {
   return (
     <>
       <div className="w-[70%] lg:h-[50%]  text-white text-3xl">
         <div className="lg:flex">
-          <div className="lg:w-[50%] h-full">
-            {url && (
+          <div
+            className={cn(
+              "lg:w-[50%]  flex flex-col  items-center justify-center",
+              loading ? "" : "h-[100%]"
+            )}
+          >
+            {loading ? (
+              <Loader2 className=" animate-spin" />
+            ) : (
               <img
-                className="w-[520px] lg:w-[320px] p-4 md:ml-6 md:mt-4 rounded-[54px]"
+                className={
+                  "w-[520px] lg:w-[320px] p-4 md:ml-6 md:mt-4 rounded-[54px]"
+                }
                 src={url}
               />
             )}
