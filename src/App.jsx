@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import Quotes from "./components/Quotes";
 import "./App.css";
+import { cn } from "../cna";
 function App() {
   const [quote, setQuote] = useState([]);
   const [image, setImage] = useState("");
+  const [colors, setColors] = useState([]);
   const [loading, setLoading] = useState(false);
   const fetchData = async () => {
     await fetch("https://katanime.vercel.app/api/getrandom")
@@ -28,11 +30,29 @@ function App() {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    console.log(quote);
+    if (quote.length > 0) {
+      getImageData(quote[0].anime);
+    }
+  }, [quote]);
+
   return (
     <>
-      <div className="  h-screen md:h-full text-center flex-col lg:h-screen p-2 bg-[#091949]">
+      <div
+        className={cn(
+          "h-screen md:h-full text-center flex-col lg:h-screen p-2 transition-all duration-500 ease-in-out"
+        )}
+        style={
+          // colors.colors !== undefined && {
+          {
+            background:
+              colors.colors !== undefined ? colors.colors[0] : "#111111",
+          }
+        }
+      >
         <div className=" flex h-[90%] cover justify-center items-center">
-          {quote.length > 0 && console.log(getImageData(quote[0].anime))}
+          {/* {quote.length > 0 && console.log(getImageData(quote[0].anime))} */}
           {quote.length > 0 && (
             <Quotes
               key={quote[0].id}
@@ -40,8 +60,10 @@ function App() {
               fetchData={fetchData}
               url={image}
               loading={loading}
+              setColorsBase={setColors}
             />
           )}
+          {/* {console.log(colors)} */}
         </div>
       </div>
     </>

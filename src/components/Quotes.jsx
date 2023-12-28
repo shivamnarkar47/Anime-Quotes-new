@@ -4,8 +4,13 @@ import { Button } from "@chakra-ui/react";
 import { RefreshCw } from "lucide-react";
 import { Loader2 } from "lucide-react";
 import { cn } from "../../cna";
+import { ColorExtractor } from "react-color-extractor";
+import { useState } from "react";
 
-function Quotes({ q, fetchData, url, loading }) {
+function Quotes({ q, fetchData, url, loading, setColorsBase }) {
+  const [coolors, setColors] = useState([]);
+  const getColors = async (colors) =>
+    await setColors({ colors: [...coolors, ...colors] });
   return (
     <>
       <div className="w-[70%] lg:h-[50%]  text-white text-3xl">
@@ -19,14 +24,18 @@ function Quotes({ q, fetchData, url, loading }) {
             {loading ? (
               <Loader2 className=" animate-spin" />
             ) : (
-              <img
-                className={
-                  "w-[520px] lg:w-[320px] p-4 md:ml-6 md:mt-4 rounded-[54px]"
-                }
-                src={url}
-              />
+              <ColorExtractor getColors={getColors}>
+                <img
+                  className={
+                    "w-[520px] lg:w-[320px] p-4 md:ml-6 md:mt-4 rounded-[54px]"
+                  }
+                  src={url}
+                />
+              </ColorExtractor>
             )}
           </div>
+          {url && console.log(url)}
+          {coolors && setColorsBase(coolors)}
           {q && (
             <div className="text-white lg:w-[50%] mr-12 p-5 flex flex-col">
               <div className="text-[#F6ECA9] md:text-[60px] text-xl font-black text-left leading-none  py-6">
@@ -37,14 +46,22 @@ function Quotes({ q, fetchData, url, loading }) {
                 {" "}
                 {q.english}
               </div>
-              <div className="text-xs md:text-lg italic text-right text-gray-400">
+              <div
+                className={"text-xs md:text-lg italic text-right "}
+                style={{
+                  color:
+                    coolors.colors !== undefined ? coolors.colors[5] : "#111",
+                }}
+              >
                 {" "}
                 - {q.character}
               </div>
               <Button
                 className="my-3 self-start lg:w-auto mt-4  w-full"
                 isLoading={loading}
-                bg={"#596FB7"}
+                bg={
+                  coolors.colors !== undefined ? coolors.colors[3] : "#596FB7"
+                }
                 textColor={"white"}
                 letterSpacing={"-1px"}
                 md:fontSize={"xl"}
